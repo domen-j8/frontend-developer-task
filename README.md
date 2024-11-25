@@ -34,7 +34,7 @@ Bonus points if you use the same stack. But feel free to use another framework l
 - Provide short instructions in the form of a README.md file on how to set up and run the app.
 - Running in a Docker container is a plus.
 
-## :: Designs
+## :ocean: Designs
 
 ![Gallery](designs/01-gallery.png)
 ![Details](designs/02-details.png)
