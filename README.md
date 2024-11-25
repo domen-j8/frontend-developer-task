@@ -28,11 +28,15 @@ Create a simple image gallery UI that allows users to:
 
 Bonus points if you use the same stack. But feel free to use another framework like React or Angular if you’re more comfortable with it.
 
-## :hammer_and_wrench: Other requirements:
+## :hammer_and_wrench: Other requirements
 - Use a CSS preprocessor of your choice to style the app. Follow the designs provided below as a guideline. No need to be pixel-perfect but try to match it as closely as possible.
 - Add some unit tests for components and store.
 - Provide short instructions in the form of a README.md file on how to set up and run the app.
 - Running in a Docker container is a plus.
+
+## :rocket: Submission
+- Clone this repository to your Github profile before you start your task
+- When you're happy with the result send us the link to your repository
 
 ## :ocean: Designs
 
