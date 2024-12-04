@@ -35,8 +35,8 @@ Bonus points if you use the same stack. But feel free to use another framework l
 - Running in a Docker container is a plus.
 
 ## :rocket: Submission
-- Clone this repository to your Github profile before you start your task
-- When you're happy with the result send us the link to your repository
+- Clone this repository to your own Github before you start your task.
+- When you're happy with the result send us the link or add `simonsafhalterceltra` as a collaborator if it's a private repository.
 
 ## :ocean: Designs
 
