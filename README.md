@@ -36,7 +36,7 @@ Bonus points if you use the same stack. But feel free to use another framework l
 
 ## :rocket: Submission
 - Clone this repository to your own Github before you start your task.
-- When you're happy with the result send us the link or add `simonsafhalterceltra` as a collaborator if it's a private repository.
+- When you're happy with the result send us the link or add `simonsafhalterceltra` and `antonsemprimoznik` as collaborators if it's a private repository.
 
 ## :ocean: Designs
 
