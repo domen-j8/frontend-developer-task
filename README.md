@@ -22,14 +22,16 @@ Create a simple image gallery UI that allows users to:
 
 ## :computer: Our tech stack
 - [Vue.js](https://vuejs.org/) (Composition API, <script setup>)
-- [TypeScript](https://www.typescriptlang.org/) 
+- [TypeScript](https://www.typescriptlang.org/)
 - [Pinia](https://pinia.vuejs.org/) for state management (Setup stores)
-- [Vue Router](https://router.vuejs.org/) 
+- [Vue Router](https://router.vuejs.org/)
 
 Bonus points if you use the same stack. But feel free to use another framework like React or Angular if you’re more comfortable with it.
 
 ## :hammer_and_wrench: Other requirements
-- Use a CSS preprocessor of your choice to style the app. Follow the designs provided below as a guideline. No need to be pixel-perfect but try to match it as closely as possible.
+- Use a CSS preprocessor of your choice to style the app. Don't use a CSS framework since we would like to see your CSS coding skills as well.
+- Follow the designs provided below as a guideline. No need to be pixel-perfect but try to match it as closely as possible.
+- Feel free to use any fonts you see fit.
 - Add some unit tests for components and store.
 - Provide short instructions in the form of a README.md file on how to set up and run the app.
 - Running in a Docker container is a plus.
