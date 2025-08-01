@@ -1,7 +1,8 @@
 <template>
   <img :src="iconPath"
        :style="{ width, height }"
-       alt="Icon"/>
+       alt="Icon"
+       class="icon"/>
 </template>
 
 <script setup lang="ts">
@@ -15,5 +16,7 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-
+.icon {
+  cursor: pointer;
+}
 </style>

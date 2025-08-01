@@ -9,6 +9,9 @@ export const useGalleryStore = defineStore('gallery', () => {
   const images = ref<LoadingState<Image[]>>({
     loading: false
   });
+  const imageDetail = ref<LoadingState<Image>>({
+    loading: false,
+  })
 
   async function fetchImages() {
     try {
@@ -19,7 +22,6 @@ export const useGalleryStore = defineStore('gallery', () => {
         image.previewUrl = image.download_url.replace(/\/\d+\/\d+$/, '/270/250');
         return image;
       });
-      debugger
     } catch {
       images.value.data = null;
     } finally {
@@ -27,9 +29,23 @@ export const useGalleryStore = defineStore('gallery', () => {
     }
   }
 
+  async function fetchImageDetail(id: string) {
+    try {
+      imageDetail.value.loading = true;
+      const response = await axios.get<Image>(`https://picsum.photos/id/${id}/info`)
+      imageDetail.value.data = response.data;
+    } catch {
+      imageDetail.value.data = null;
+    } finally {
+      imageDetail.value.loading = false;
+    }
+  }
+
   return {
     currentPage,
+    images,
+    imageDetail,
     fetchImages,
-    images
+    fetchImageDetail
   };
 })
