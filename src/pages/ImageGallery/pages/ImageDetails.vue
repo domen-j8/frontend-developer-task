@@ -1,7 +1,10 @@
 <template>
   <div class="header">
     <div class="back">
-      <router-link :to="{ name: 'Gallery' }">
+      <router-link :to="{
+        name: 'Gallery',
+        params: { page: pageNumber },
+        query: { viewed: route.params.id } }">
         <base-icon :icon-path="arrowLeftIcon" :width="'20px'"/>
       </router-link>
       <div v-if="image.loading">
@@ -49,19 +52,19 @@ import arrowLeftIcon from '@/assets/img/arrow-left-regular.svg'
 import caretLeftIcon from '@/assets/img/caret-left-regular.svg'
 import caretRightIcon from '@/assets/img/caret-right-regular.svg'
 
-
 const route = useRoute()
 const router = useRouter()
+const galleryStore = useGalleryStore();
+
+const pageNumber: ComputedRef<number> = computed(() => Number(route.params.page));
 
 watch(
   () => route.params.id,
   (newId) => {
     galleryStore.fetchImageDetail(newId as string);
-  }
+  },
+  { immediate: true }
 )
-
-const galleryStore = useGalleryStore();
-galleryStore.fetchImageDetail(route.params.id as string);
 
 const image: ComputedRef<LoadingState<Image>> = computed(() => galleryStore.imageDetail);
 

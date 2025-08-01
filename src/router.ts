@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/pages/NotFound.vue';
 
-const appRouter = createRouter({
+const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
@@ -9,13 +9,13 @@ const appRouter = createRouter({
       redirect: '/gallery'
     },
     {
-      path: '/gallery',
+      path: '/gallery/:page?',
       name: 'Gallery',
       component: () => import('./pages/ImageGallery/ImageGallery.vue'),
     },
     {
 
-      path: '/gallery/image-details/:id',
+      path: '/gallery/:page/image-details/:id',
       name: 'ImageDetails',
       component: () => import('./pages/ImageGallery/pages/ImageDetails.vue'),
     },
@@ -27,4 +27,4 @@ const appRouter = createRouter({
   ],
 })
 
-export default appRouter;
+export default router;

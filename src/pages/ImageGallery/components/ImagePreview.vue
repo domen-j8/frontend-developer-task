@@ -3,10 +3,11 @@
   <router-link :to="{
     name: 'ImageDetails' ,
     params: {
+      page: pageNumber,
       id: image.id ,
     }
   }">
-    <div class="image-preview">
+    <div class="image-preview" :class="{ viewed: viewedImage }">
       <img :src="`${image.previewUrl}`" loading="lazy" alt="Gallery image"/>
     </div>
   </router-link>
@@ -17,7 +18,9 @@
 import type {Image} from '@/pages/ImageGallery/interfaces/Image.ts';
 
 defineProps<{
-  image: Image
+  image: Image,
+  pageNumber: number,
+  viewedImage: boolean
 }>()
 </script>
 
@@ -26,5 +29,14 @@ defineProps<{
   height: 250px;
   width: 270px;
   border-radius: 10px;
+
+  &.viewed {
+    border: 5px solid red;
+    border-radius: 15px;
+  }
+
+  img {
+    border-radius: 10px;
+  }
 }
 </style>
