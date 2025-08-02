@@ -2,8 +2,8 @@
   <base-paginator
     @page-change="changePage($event)"
     :page-number="currentPage"
-    :total-items="126"
-    :page-size="20"/>
+    :total-items="galleryStore.totalItems"
+    :page-size="galleryStore.pageSize"/>
 
   <div v-if="images.loading">
     Loading...

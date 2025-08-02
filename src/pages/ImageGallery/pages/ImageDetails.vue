@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+
     <div class="back">
       <router-link :to="{
         name: 'Gallery',
@@ -7,34 +8,55 @@
         query: { viewed: route.params.id } }">
         <base-icon :icon-path="arrowLeftIcon" :width="'20px'"/>
       </router-link>
-      <div v-if="image.loading">
-        ...
-      </div>
-      <div v-else>
-        {{ image.data?.author }}
-      </div>
+<!--      <div v-if="image.loading">-->
+<!--        ...-->
+<!--      </div>-->
+<!--      <div v-else>-->
+<!--        {{ image.data?.author }}-->
+<!--      </div>-->
     </div>
+
     <div class="navigation">
-      <base-icon @click="previousImage" :icon-path="caretLeftIcon" :width="'20px'"/>
-      <base-icon @click="nextImage" :icon-path="caretRightIcon" :width="'20px'"/>
+      <base-icon
+        @click="previousImage"
+        :icon-path="caretLeftIcon"
+        :width="'20px'"
+        :disabled="galleryStore.firstImageId === imageDetail.data?.id"/>
+      <base-icon
+        @click="nextImage"
+        :icon-path="caretRightIcon"
+        :width="'20px'"
+        :disabled="galleryStore.lastImageId === imageDetail.data?.id"/>
     </div>
+
     <div>
       <button>Download</button>
     </div>
+
   </div>
 
-  <div v-if="image.loading">
-    Data loading...
-  </div>
-  <div v-else class="image-details">
-    <div class="image-size">
-      {{ image.data?.width }}
-      x
-      {{ image.data?.height }}
+  <div>
+    <div class="image-details">
+      <template v-if="imageDetail.loading">
+        <base-loader :height="'40px'" :width="'200px'"/>
+      </template>
+      <template v-else>
+        {{ imageDetail.data?.width }}
+        x
+        {{ imageDetail.data?.height }}
+      </template>
     </div>
 
     <div class="image-container">
-      <img :src="`${image.data?.download_url}`" alt="Image detail"/>
+      <div class="image-wrapper">
+        <base-loader :absolute="true" v-if="imageLoading"/>
+        <img
+          :src="`${imageDetail.data?.download_url}`"
+          @load="onImageLoad"
+          alt="Image detail"
+        />
+      </div>
+
     </div>
 
   </div>
@@ -42,7 +64,7 @@
 
 <script setup lang="ts">
 
-import {computed, type ComputedRef, watch} from 'vue'
+import {computed, type ComputedRef, ref, watch} from 'vue'
 import {useGalleryStore} from '@/pages/ImageGallery/store.ts';
 import type {Image} from '@/pages/ImageGallery/interfaces/Image.ts';
 import type {LoadingState} from '@/shared/interfaces/LoadingState.ts';
@@ -51,31 +73,61 @@ import BaseIcon from '@/shared/components/BaseIcon.vue';
 import arrowLeftIcon from '@/assets/img/arrow-left-regular.svg'
 import caretLeftIcon from '@/assets/img/caret-left-regular.svg'
 import caretRightIcon from '@/assets/img/caret-right-regular.svg'
+import BaseLoader from '@/shared/components/BaseLoader.vue';
 
 const route = useRoute()
 const router = useRouter()
 const galleryStore = useGalleryStore();
 
 const pageNumber: ComputedRef<number> = computed(() => Number(route.params.page));
+const imageDetail: ComputedRef<LoadingState<Image>> = computed(() => galleryStore.imageDetail);
+
+const imageLoading = ref(false)
+let imageLoadingTimeout: number;
 
 watch(
   () => route.params.id,
-  (newId) => {
-    galleryStore.fetchImageDetail(newId as string);
+  (newId, _, onCleanUp) => {
+    galleryStore.setImageDetail(Number(route.params.page), newId as string);
+    imageLoadingTimeout = setTimeout(() => {
+      imageLoading.value = true;
+    }, 200);
+
+    onCleanUp(() => {
+      if (imageLoadingTimeout) {
+        clearTimeout(imageLoadingTimeout);
+      }
+    });
   },
   { immediate: true }
 )
 
-const image: ComputedRef<LoadingState<Image>> = computed(() => galleryStore.imageDetail);
-
-function previousImage() {
-  const currentId = Number(route.params.id);
-  router.push({name: 'ImageDetails', params: {id: String(currentId - 1)}});
+async function previousImage() {
+  const { targetImageId, targetPageNumber } = await galleryStore.getPreviousImage(Number(route.params.page), route.params.id as string);
+  if (targetImageId && targetPageNumber) {
+    await router.push({name: 'ImageDetails', params: {page: targetPageNumber, id: targetImageId}});
+  } else {
+    //todo notify user that something is wrong
+  }
 }
 
-function nextImage() {
-  const currentId = Number(route.params.id);
-  router.push({name: 'ImageDetails', params: {id: String(currentId + 1)}});
+async function nextImage() {
+  const currentImageId = route.params.id as string;
+  if (galleryStore.lastImageId !== currentImageId) {
+    const { targetImageId, targetPageNumber } = await galleryStore.getNextImage(Number(route.params.page), currentImageId);
+    if (targetImageId && targetPageNumber) {
+      await router.push({name: 'ImageDetails', params: {page: targetPageNumber, id: targetImageId}});
+    } else {
+      //todo notify user that something is wrong
+    }
+  }
+}
+
+function onImageLoad() {
+  imageLoading.value = false;
+  if (imageLoadingTimeout) {
+    clearTimeout(imageLoadingTimeout);
+  }
 }
 
 </script>
@@ -98,18 +150,21 @@ function nextImage() {
 }
 
 .image-details {
-  .image-size {
-    padding-top: 40px;
-    padding-bottom: 10px;
-  }
+  padding-top: 40px;
+  padding-bottom: 10px;
+}
 
-  .image-container {
-    display: flex;
-    justify-content: center;
+.image-container {
+  display: flex;
+  justify-content: center;
+
+  .image-wrapper {
+    position: relative;
+    width: 800px;
+    min-height: 400px;
 
     img {
       border-radius: 10px;
-      width: 800px;
     }
   }
 }

@@ -2,7 +2,8 @@
   <img :src="iconPath"
        :style="{ width, height }"
        alt="Icon"
-       class="icon"/>
+       class="icon"
+       :class="{ disabled: disabled }"/>
 </template>
 
 <script setup lang="ts">
@@ -10,7 +11,8 @@
 defineProps<{
   iconPath: string,
   width?: string,
-  height?: string
+  height?: string,
+  disabled?: boolean,
 }>()
 
 </script>
@@ -18,5 +20,10 @@ defineProps<{
 <style scoped lang="scss">
 .icon {
   cursor: pointer;
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 }
 </style>
