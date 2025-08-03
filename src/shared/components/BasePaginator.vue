@@ -7,7 +7,7 @@
       <div class="previous" @click="previousPage">
         <base-icon class="caret-left" :icon-path="caretLeftIcon" :height="'16px'" :disabled="firstPage"/>
       </div>
-      <div v-for="page in numberOfPages">
+      <div v-for="page in numberOfPages" :key="page">
         <div @click="pageChange(page)"
              class="page-number-container"
              :class="{ active: page === pageNumber }">

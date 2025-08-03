@@ -54,7 +54,7 @@
         <div class="image-wrapper">
           <base-loader
             :absolute="true"
-            :border-radius="'10px'"
+            :border-radius="'7px'"
             v-if="imageLoading || imageDetail.loading"/>
           <img
             :src="`${imageDetail.data?.download_url}`"
@@ -88,7 +88,7 @@ const pageNumber: ComputedRef<number> = computed(() => Number(route.params.page)
 const imageDetail: ComputedRef<LoadingState<Image>> = computed(() => galleryStore.imageDetail);
 
 const imageLoading = ref(false)
-let imageLoadingTimeout: number;
+let imageLoadingTimeout: ReturnType<typeof setTimeout>;
 
 watch(
   () => route.params.id,
