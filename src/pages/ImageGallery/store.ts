@@ -6,19 +6,33 @@ import type {LoadingState} from '@/shared/interfaces/LoadingState.ts';
 import type {ImageNavigation} from '@/pages/ImageGallery/interfaces/ImageNavigation.ts';
 
 export const useGalleryStore = defineStore('gallery', () => {
+  // Constants for pagination
   const totalItems = 120;
   const pageSize = 20;
+
+  // Track first and last image IDs for navigation boundaries
   const firstImageId = ref<string | null>(null);
   const lastImageId = ref<string | null>(null);
+
+  // Images on currently displayed page
   const images = ref<LoadingState<Image[]>>({
     loading: false
   });
+
+  // Cache for all fetched pages to avoid re-fetching
   const allImages = ref<Map<number, Image[]>>(new Map());
+
+  // Selected image on image detail page
   const imageDetail = ref<LoadingState<Image>>({
     loading: false,
   })
+
+  // For cancelling ongoing image fetch requests
   let imagesController: AbortController | null = null;
 
+  /**
+   * Sets images for a specific page, using cache if available
+   */
   async function setPageImages(page: number) {
     if (allImages.value.has(page)) {
       images.value.data = allImages.value.get(page);
@@ -27,6 +41,9 @@ export const useGalleryStore = defineStore('gallery', () => {
     }
   }
 
+  /**
+   * Sets {@link imageDetail}. If the image is not found in cache, it fetches data for the given page.
+   */
   function setImageDetail(page: number, imageId: string) {
     if (!images.value.data || !images.value.data.find(image => image.id === imageId)) {
       imageDetail.value.loading = true;
@@ -57,12 +74,12 @@ export const useGalleryStore = defineStore('gallery', () => {
       if (page === 1) {
         firstImageId.value = response.data[0].id;
       }
-      // consider that totalItems would be included in response
+      // totalItems would come from the API response
       const totalPages = Math.ceil(totalItems / pageSize);
       if (totalPages === page) {
         lastImageId.value = response.data[response.data.length - 1].id;
       } else if (page > totalPages) {
-        // Simulate error if fetching images that don't exist (e.g. above last page)
+        // Handle requests for non-existent pages
         throw new Error('Page not found');
       }
       images.value.data = response.data;
@@ -79,6 +96,12 @@ export const useGalleryStore = defineStore('gallery', () => {
     }
   }
 
+  /**
+   * Gets the previous image from {@link images}. If the current image is the first on the page,
+   * it fetches the previous page to continue navigation.
+   *
+   * @returns An object containing the ID and page number of the previous image.
+   */
   async function getPreviousImage(currentPage: number, imageId: string): Promise<ImageNavigation> {
     const targetImage = {
       targetImageId: null,
@@ -115,6 +138,12 @@ export const useGalleryStore = defineStore('gallery', () => {
     return targetImage;
   }
 
+  /**
+   * Gets the next image from {@link images}.
+   * If the current image is the last on the page, it fetches the next page to continue navigation.
+   *
+   * @returns An object containing the ID and page number of the next image.
+   */
   async function getNextImage(currentPage: number, imageId: string): Promise<ImageNavigation> {
     const targetImage = {
       targetImageId: null,

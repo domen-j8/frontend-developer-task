@@ -17,7 +17,6 @@
 import BaseIcon from '@/shared/components/BaseIcon.vue';
 import logoPath from '@/assets/img/logo.svg'
 
-
 </script>
 
 <style scoped lang="scss">
