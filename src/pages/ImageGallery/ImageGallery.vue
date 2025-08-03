@@ -1,25 +1,30 @@
 <template>
-  <base-paginator
-    @page-change="changePage($event)"
-    :page-number="currentPage"
-    :total-items="galleryStore.totalItems"
-    :page-size="galleryStore.pageSize"/>
-
-  <div v-if="images.loading">
-    Loading...
-  </div>
-  <div class="image-container" v-else-if="images.data">
-    <div v-for="image in images.data" :key="image.id">
-      <image-preview
-        :image="image"
+  <div class="gallery-container">
+    <div class="paginator-wrapper">
+      <base-paginator
+        @page-change="changePage($event)"
         :page-number="currentPage"
-        :viewedImage="image.id === viewedImageId"/>
+        :total-items="galleryStore.totalItems"
+        :page-size="galleryStore.pageSize"/>
+    </div>
+
+    <div class="gallery-items">
+      <div v-if="images.loading">
+        Loading...
+      </div>
+      <div class="image-container" v-else-if="images.data">
+        <div v-for="image in images.data" :key="image.id">
+          <image-preview
+            :image="image"
+            :page-number="currentPage"
+            :viewedImage="image.id === viewedImageId"/>
+        </div>
+      </div>
+      <div v-else>
+        No images available
+      </div>
     </div>
   </div>
-  <div v-else>
-    No images available
-  </div>
-
 </template>
 
 <script setup lang="ts">
@@ -49,9 +54,37 @@ function changePage(page: number) {
 </script>
 
 <style scoped lang="scss">
-.image-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+@use "@/assets/style/variables" as var;
+
+.gallery-container {
+  background: var(--colors-base9);
+  border-radius: 5px;
+
+  .paginator-wrapper {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--colors-base5);
+  }
+
+  .gallery-items {
+    padding: 20px;
+
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+  }
 }
+
+@media (min-width: var.$tablet-screen-breakpoint) {
+  .gallery-container {
+    .gallery-items {
+      .image-container {
+        justify-content: flex-start;
+      }
+    }
+  }
+}
+
 </style>

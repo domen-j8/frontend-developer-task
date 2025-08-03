@@ -22,7 +22,7 @@ defineProps<{
   cursor: pointer;
 
   &.disabled {
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: default;
   }
 }

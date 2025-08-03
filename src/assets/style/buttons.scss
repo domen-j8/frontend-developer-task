@@ -1,0 +1,11 @@
+button {
+  border: unset;
+  cursor: pointer;
+  padding: 2px 12px;
+  border-radius: 4px;
+
+  &.primary {
+    color: var(--colors-base0);
+    background: var(--colors-base5);
+  }
+}

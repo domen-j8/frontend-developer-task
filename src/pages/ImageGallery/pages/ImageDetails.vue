@@ -1,64 +1,66 @@
 <template>
-  <div class="header">
-
-    <div class="back">
-      <router-link :to="{
+  <div class="image-details-container">
+    <div class="header">
+      <div class="back">
+        <router-link :to="{
         name: 'Gallery',
         params: { page: pageNumber },
         query: { viewed: route.params.id } }">
-        <base-icon :icon-path="arrowLeftIcon" :width="'20px'"/>
-      </router-link>
-<!--      <div v-if="image.loading">-->
-<!--        ...-->
-<!--      </div>-->
-<!--      <div v-else>-->
-<!--        {{ image.data?.author }}-->
-<!--      </div>-->
-    </div>
+          <base-icon :icon-path="arrowLeftIcon" :width="'18px'"/>
+        </router-link>
 
-    <div class="navigation">
-      <base-icon
-        @click="previousImage"
-        :icon-path="caretLeftIcon"
-        :width="'20px'"
-        :disabled="galleryStore.firstImageId === imageDetail.data?.id"/>
-      <base-icon
-        @click="nextImage"
-        :icon-path="caretRightIcon"
-        :width="'20px'"
-        :disabled="galleryStore.lastImageId === imageDetail.data?.id"/>
-    </div>
+        <template v-if="imageDetail.loading">
+          <base-loader :height="'20px'" :width="'150px'"/>
+        </template>
+        <template v-else>
+          {{ imageDetail.data?.author }}
+        </template>
+      </div>
 
-    <div>
-      <button>Download</button>
-    </div>
+      <div class="navigation">
+        <div class="previous" @click="previousImage">
+          <base-icon
+            :icon-path="caretLeftIcon"
+            :width="'16px'"
+            :disabled="galleryStore.firstImageId === imageDetail.data?.id"/>
+        </div>
+        <div class="next" @click="nextImage">
+          <base-icon
+            :icon-path="caretRightIcon"
+            :width="'16px'"
+            :disabled="galleryStore.lastImageId === imageDetail.data?.id"/>
+        </div>
+      </div>
 
-  </div>
-
-  <div>
-    <div class="image-details">
-      <template v-if="imageDetail.loading">
-        <base-loader :height="'40px'" :width="'200px'"/>
-      </template>
-      <template v-else>
-        {{ imageDetail.data?.width }}
-        x
-        {{ imageDetail.data?.height }}
-      </template>
-    </div>
-
-    <div class="image-container">
-      <div class="image-wrapper">
-        <base-loader :absolute="true" v-if="imageLoading"/>
-        <img
-          :src="`${imageDetail.data?.download_url}`"
-          @load="onImageLoad"
-          alt="Image detail"
-        />
+      <div class="download">
+        <button class="primary">Download</button>
       </div>
 
     </div>
 
+    <div class="image-content">
+      <div class="image-details">
+        <template v-if="imageDetail.loading">
+          <base-loader :height="'20px'" :width="'100px'"/>
+        </template>
+        <template v-else>
+          {{ imageDetail.data?.width }}
+          x
+          {{ imageDetail.data?.height }}
+        </template>
+      </div>
+
+      <div class="image-container">
+        <div class="image-wrapper">
+          <base-loader :absolute="true" v-if="imageLoading || imageDetail.loading"/>
+          <img
+            :src="`${imageDetail.data?.download_url}`"
+            @load="onImageLoad"
+            alt="Image detail"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -133,38 +135,87 @@ function onImageLoad() {
 </script>
 
 <style scoped lang="scss">
-.header {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid black;
-  padding: 5px 10px;
+@use "@/assets/style/variables" as var;
 
-  .back {
-    display: flex;
+.image-details-container {
+  background: var(--colors-base9);
+  height: 100%;
+  border-radius: 5px;
+
+  .header {
+    --padding-block: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
     align-items: center;
+    border-bottom: 1px solid var(--colors-base5);
+    padding-inline: 20px;
+
+    .back {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 14px;
+      padding-block: var(--padding-block);
+    }
+
+    .navigation {
+      display: flex;
+      gap: 70px;
+      justify-self: center;
+
+      .previous, .next {
+        cursor: pointer;
+        padding: var(--padding-block);
+      }
+    }
+
+    .download {
+      font-size: 12px;
+      justify-self: center;
+      padding-block: var(--padding-block);
+    }
   }
 
-  .navigation {
-    display: flex;
+  .image-content {
+    background: var(--colors-base7);
+    margin: 20px;
+    border-radius: 10px;
+    padding: 20px 20px 50px 20px;
+
+    .image-details {
+      padding-bottom: 10px;
+      font-size: 12px;
+      color: var(--colors-base1);
+    }
+
+    .image-container {
+      display: flex;
+      justify-self: center;
+      max-width: 800px;
+      width: 100%;
+
+      .image-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: 400px;
+
+        img {
+          border-radius: 10px;
+        }
+      }
+    }
   }
+
 }
 
-.image-details {
-  padding-top: 40px;
-  padding-bottom: 10px;
-}
+@media (min-width: var.$tablet-screen-breakpoint) {
+  .image-details-container {
+    .header {
+      grid-template-columns: 1fr auto 1fr;
 
-.image-container {
-  display: flex;
-  justify-content: center;
-
-  .image-wrapper {
-    position: relative;
-    width: 800px;
-    min-height: 400px;
-
-    img {
-      border-radius: 10px;
+      .download {
+        justify-self: end;
+      }
     }
   }
 }

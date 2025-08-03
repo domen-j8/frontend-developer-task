@@ -41,6 +41,9 @@ withDefaults(defineProps<Props>(), {
 }
 
 .skeleton-box {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
   background-color: #DDDBDD;
 
   &::after {

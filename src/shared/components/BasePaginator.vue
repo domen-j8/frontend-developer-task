@@ -4,7 +4,7 @@
       {{ pageFirstEntry }} - {{ pageLastEntry }} of {{ totalItems }}
     </div>
     <div class="pages">
-      <base-icon @click="previousPage" :icon-path="caretLeftIcon" :width="'20px'" :disabled="firstPage"/>
+      <base-icon class="caret-left" @click="previousPage" :icon-path="caretLeftIcon" :height="'16px'" :disabled="firstPage"/>
       <div v-for="page in numberOfPages">
         <div @click="pageChange(page)"
              class="page-number-container"
@@ -12,7 +12,7 @@
           {{ page }}
         </div>
       </div>
-      <base-icon @click="nextPage" :icon-path="caretRightIcon" :width="'20px'" :disabled="lastPage"/>
+      <base-icon class="caret-right" @click="nextPage" :icon-path="caretRightIcon" :width="'16px'" :disabled="lastPage"/>
     </div>
   </div>
 </template>
@@ -67,20 +67,50 @@ function pageChange(page: number) {
 </script>
 
 <style scoped lang="scss">
+@use "@/assets/style/variables" as var;
+
 .paginator-container {
   display: flex;
+  font-size: 14px;
+  flex-direction: column;
+  gap: 10px;
+
+  .current-items {
+    color: var(--colors-base2);
+  }
 
   .pages {
     display: flex;
+    align-items: center;
+    gap: 2px;
+    justify-content: center;
+
+    .caret-left {
+      margin-right: 10px;
+    }
+
+    .caret-right {
+      margin-left: 10px;
+    }
 
     .page-number-container {
-      padding-inline: 5px;
+      padding-inline: 7px;
       cursor: pointer;
 
       &.active {
-        border: 1px solid black;
+        --active-color: #528cff;
+        color: var(--active-color);
+        border: 1px solid var(--active-color);
+        border-radius: 5px;
       }
     }
+  }
+}
+
+@media (min-width: var.$tablet-screen-breakpoint) {
+  .paginator-container {
+    justify-content: space-between;
+    flex-direction: row;
   }
 }
 </style>
