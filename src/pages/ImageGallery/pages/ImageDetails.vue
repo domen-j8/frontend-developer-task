@@ -52,7 +52,10 @@
 
       <div class="image-container">
         <div class="image-wrapper">
-          <base-loader :absolute="true" v-if="imageLoading || imageDetail.loading"/>
+          <base-loader
+            :absolute="true"
+            :border-radius="'10px'"
+            v-if="imageLoading || imageDetail.loading"/>
           <img
             :src="`${imageDetail.data?.download_url}`"
             @load="onImageLoad"
@@ -197,7 +200,7 @@ function onImageLoad() {
       .image-wrapper {
         position: relative;
         width: 100%;
-        min-height: 400px;
+        min-height: 200px;
 
         img {
           border-radius: 10px;
@@ -215,6 +218,14 @@ function onImageLoad() {
 
       .download {
         justify-self: end;
+      }
+    }
+
+    .image-content {
+      .image-container {
+        .image-wrapper {
+          min-height: 400px;
+        }
       }
     }
   }

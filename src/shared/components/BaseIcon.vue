@@ -20,6 +20,7 @@ defineProps<{
 <style scoped lang="scss">
 .icon {
   cursor: pointer;
+  user-select: none;
 
   &.disabled {
     opacity: 0.3;

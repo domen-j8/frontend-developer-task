@@ -4,7 +4,9 @@
       {{ pageFirstEntry }} - {{ pageLastEntry }} of {{ totalItems }}
     </div>
     <div class="pages">
-      <base-icon class="caret-left" @click="previousPage" :icon-path="caretLeftIcon" :height="'16px'" :disabled="firstPage"/>
+      <div class="previous" @click="previousPage">
+        <base-icon class="caret-left" :icon-path="caretLeftIcon" :height="'16px'" :disabled="firstPage"/>
+      </div>
       <div v-for="page in numberOfPages">
         <div @click="pageChange(page)"
              class="page-number-container"
@@ -12,7 +14,9 @@
           {{ page }}
         </div>
       </div>
-      <base-icon class="caret-right" @click="nextPage" :icon-path="caretRightIcon" :width="'16px'" :disabled="lastPage"/>
+      <div class="next" @click="nextPage">
+        <base-icon class="caret-right" :icon-path="caretRightIcon" :width="'16px'" :disabled="lastPage"/>
+      </div>
     </div>
   </div>
 </template>
@@ -70,13 +74,16 @@ function pageChange(page: number) {
 @use "@/assets/style/variables" as var;
 
 .paginator-container {
+  --padding-block: 10px;
   display: flex;
   font-size: 14px;
   flex-direction: column;
   gap: 10px;
+  padding-inline: 15px;
 
   .current-items {
     color: var(--colors-base2);
+    padding-block: var(--padding-block);
   }
 
   .pages {
@@ -85,12 +92,11 @@ function pageChange(page: number) {
     gap: 2px;
     justify-content: center;
 
-    .caret-left {
-      margin-right: 10px;
-    }
-
-    .caret-right {
-      margin-left: 10px;
+    .previous, .next {
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      padding: var(--padding-block);
     }
 
     .page-number-container {

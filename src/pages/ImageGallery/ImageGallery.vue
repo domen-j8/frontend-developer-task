@@ -9,16 +9,22 @@
     </div>
 
     <div class="gallery-items">
-      <div v-if="images.loading">
-        Loading...
-      </div>
-      <div class="image-container" v-else-if="images.data">
-        <div v-for="image in images.data" :key="image.id">
+      <div class="image-container" v-if="images.loading || images.data">
+        <template v-if="images.loading">
+          <base-loader
+            v-for="index in 20" :key="index"
+            :width="previewWidth"
+            :height="previewHeight"/>
+        </template>
+        <template v-else>
           <image-preview
+            v-for="image in images.data" :key="image.id"
             :image="image"
             :page-number="currentPage"
-            :viewedImage="image.id === viewedImageId"/>
-        </div>
+            :viewedImage="image.id === viewedImageId"
+            :width="previewWidth"
+            :height="previewHeight"/>
+        </template>
       </div>
       <div v-else>
         No images available
@@ -35,11 +41,14 @@ import BasePaginator from '@/shared/components/BasePaginator.vue';
 import {type LocationQueryValue, useRoute, useRouter} from 'vue-router';
 import type {Image} from '@/pages/ImageGallery/interfaces/Image.ts';
 import type {LoadingState} from '@/shared/interfaces/LoadingState.ts';
+import BaseLoader from '@/shared/components/BaseLoader.vue';
 
 const route = useRoute();
 const router = useRouter();
 const galleryStore = useGalleryStore();
 
+const previewWidth = '270px';
+const previewHeight = '350px';
 const images: ComputedRef<LoadingState<Image[]>> = computed(() => (galleryStore.images));
 const currentPage: ComputedRef<number> = computed(() => Number(route.params.page) || 1);
 const viewedImageId: ComputedRef<LocationQueryValue> = computed(() => route.query.viewed as LocationQueryValue);
@@ -61,7 +70,6 @@ function changePage(page: number) {
   border-radius: 5px;
 
   .paginator-wrapper {
-    padding: 10px 15px;
     border-bottom: 1px solid var(--colors-base5);
   }
 
